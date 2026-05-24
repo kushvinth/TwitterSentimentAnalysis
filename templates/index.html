@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TweetMood • Sentiment Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="background-glow"></div>
+    <main class="container">
+      <header class="hero">
+        <p class="badge">Twitter Sentiment Analysis</p>
+        <h1>TweetMood Dashboard</h1>
+        <p class="subtitle">Analyze live sentiment around any keyword in seconds.</p>
+      </header>
+
+      <section class="panel">
+        <form id="analyze-form" class="controls">
+          <label>
+            Keyword
+            <input type="text" id="keyword" value="Trump" required />
+          </label>
+          <label>
+            Tweet count (5-100)
+            <input type="number" id="count" value="50" min="5" max="100" required />
+          </label>
+          <button type="submit">Analyze</button>
+        </form>
+        <p id="status" class="status"></p>
+      </section>
+
+      <section id="results" class="results hidden">
+        <div class="stats-grid">
+          <article>
+            <h3>Total Tweets</h3>
+            <p id="total-tweets">0</p>
+          </article>
+          <article>
+            <h3>Average Polarity</h3>
+            <p id="avg-polarity">0</p>
+          </article>
+          <article>
+            <h3>Average Subjectivity</h3>
+            <p id="avg-subjectivity">0</p>
+          </article>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="sentiment-chart" aria-label="Sentiment chart"></canvas>
+        </div>
+
+        <div>
+          <h2>Recent Tweets</h2>
+          <div id="tweet-list" class="tweet-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
