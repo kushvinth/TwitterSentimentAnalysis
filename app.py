@@ -51,10 +51,15 @@ def index():
             context["error"] = "Please enter a keyword."
             return render_template("index.html", **context)
 
-        if not count.isdigit() or int(count) <= 0 or int(count) > MAX_TWEET_COUNT:
+        try:
+            count_value = int(count)
+        except ValueError:
             context["error"] = f"Count must be between 1 and {MAX_TWEET_COUNT}."
             return render_template("index.html", **context)
-        count_value = int(count)
+
+        if count_value <= 0 or count_value > MAX_TWEET_COUNT:
+            context["error"] = f"Count must be between 1 and {MAX_TWEET_COUNT}."
+            return render_template("index.html", **context)
 
         if not _credentials_available():
             context["error"] = "Twitter API credentials are missing. Add values to your .env file."
