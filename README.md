@@ -29,3 +29,7 @@ python app.py
 ```
 
 Then open `http://127.0.0.1:5000` in your browser.
+
+## Production note
+
+For production deployment, run this Flask app behind a production WSGI server (for example, Gunicorn or uWSGI) instead of Flask's built-in development server.
