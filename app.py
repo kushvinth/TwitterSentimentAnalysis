@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+import tweepy
 
 from twitter_analyzer import TwitterAnalyzer
 
@@ -34,7 +35,7 @@ def analyze():
     try:
         analyzer = TwitterAnalyzer()
         df = analyzer.analyze_tweets(keyword=keyword, count=count)
-    except Exception:
+    except (TypeError, ValueError, AttributeError, tweepy.TweepyException):
         return jsonify({"error": "Failed to initialize analyzer."}), 500
 
     if df is None or df.empty:

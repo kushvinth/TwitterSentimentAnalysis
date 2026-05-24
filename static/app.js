@@ -2,6 +2,7 @@ const form = document.getElementById('analyze-form');
 const statusNode = document.getElementById('status');
 const results = document.getElementById('results');
 const tweetList = document.getElementById('tweet-list');
+const MAX_DISPLAYED_TWEETS = 8;
 let chart;
 
 function setStatus(message, isError = false) {
@@ -39,7 +40,7 @@ function renderChart(breakdown) {
 
 function renderTweets(tweets) {
   tweetList.innerHTML = '';
-  tweets.slice(0, 8).forEach((tweet) => {
+  tweets.slice(0, MAX_DISPLAYED_TWEETS).forEach((tweet) => {
     const card = document.createElement('article');
     card.className = `tweet-card ${tweet.sentiment}`;
 
