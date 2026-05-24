@@ -21,9 +21,9 @@ def _summary_from_results(df):
     if df is None or df.empty:
         return {"positive": 0, "neutral": 0, "negative": 0, "avg_polarity": 0}
 
-    positive = int((df["polarity"] > NEUTRAL_SENTIMENT_THRESHOLD).sum())
-    negative = int((df["polarity"] < -NEUTRAL_SENTIMENT_THRESHOLD).sum())
-    neutral = int((df["polarity"].abs() <= NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    positive = int((df["polarity"] >= NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    negative = int((df["polarity"] <= -NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    neutral = int((df["polarity"].abs() < NEUTRAL_SENTIMENT_THRESHOLD).sum())
 
     return {
         "positive": positive,
