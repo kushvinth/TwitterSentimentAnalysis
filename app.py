@@ -59,7 +59,7 @@ def index():
             return render_template("index.html", **context)
 
         context["summary"] = _summary_from_results(results)
-        context["rows"] = results.head(count_value).to_dict(orient="records")
+        context["rows"] = results.to_dict(orient="records")
 
     return render_template("index.html", **context)
 
