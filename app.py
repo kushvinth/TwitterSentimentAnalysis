@@ -21,9 +21,9 @@ def _summary_from_results(df):
     if df is None or df.empty:
         return {"positive": 0, "neutral": 0, "negative": 0, "avg_polarity": 0}
 
-    positive = int((df["polarity"] >= NEUTRAL_SENTIMENT_THRESHOLD).sum())
-    negative = int((df["polarity"] <= -NEUTRAL_SENTIMENT_THRESHOLD).sum())
-    neutral = int((df["polarity"].abs() < NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    positive = int((df["polarity"] > NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    negative = int((df["polarity"] < -NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    neutral = int((df["polarity"].abs() <= NEUTRAL_SENTIMENT_THRESHOLD).sum())
 
     return {
         "positive": positive,
@@ -54,7 +54,7 @@ def index():
         try:
             count_value = int(count)
         except ValueError:
-            context["error"] = f"Count must be between 1 and {MAX_TWEET_COUNT}."
+            context["error"] = "Count must be a valid number."
             return render_template("index.html", **context)
 
         if count_value <= 0 or count_value > MAX_TWEET_COUNT:
