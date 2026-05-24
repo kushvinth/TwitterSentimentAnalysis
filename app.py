@@ -18,9 +18,10 @@ def _summary_from_results(df):
     if df is None or df.empty:
         return {"positive": 0, "neutral": 0, "negative": 0, "avg_polarity": 0}
 
-    positive = int((df["polarity"] > 0).sum())
-    negative = int((df["polarity"] < 0).sum())
-    neutral = int((df["polarity"] == 0).sum())
+    neutral_threshold = 0.01
+    positive = int((df["polarity"] > neutral_threshold).sum())
+    negative = int((df["polarity"] < -neutral_threshold).sum())
+    neutral = int((df["polarity"].abs() <= neutral_threshold).sum())
 
     return {
         "positive": positive,
