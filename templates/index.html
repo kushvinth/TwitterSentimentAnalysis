@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Twitter Sentiment Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="hero">
+        <h1>Twitter Sentiment Dashboard</h1>
+        <p>Track the vibe around any topic in seconds.</p>
+      </section>
+
+      <section class="card">
+        <form method="post" class="search-form">
+          <label>
+            Keyword
+            <input name="keyword" type="text" placeholder="e.g. AI, football, cinema" required />
+          </label>
+          <label>
+            Tweet count
+            <input name="count" type="number" value="25" min="1" max="100" required />
+          </label>
+          <button type="submit">Analyze</button>
+        </form>
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+      </section>
+
+      {% if summary %}
+      <section class="grid">
+        <article class="metric">
+          <h2>😊 Positive</h2>
+          <p>{{ summary.positive }}</p>
+        </article>
+        <article class="metric">
+          <h2>😐 Neutral</h2>
+          <p>{{ summary.neutral }}</p>
+        </article>
+        <article class="metric">
+          <h2>☹️ Negative</h2>
+          <p>{{ summary.negative }}</p>
+        </article>
+        <article class="metric">
+          <h2>Avg Polarity</h2>
+          <p>{{ summary.avg_polarity }}</p>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Recent Tweets (Top 25)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tweet</th>
+                <th>Polarity</th>
+                <th>Subjectivity</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+              <tr>
+                <td>{{ row.tweet }}</td>
+                <td>{{ "%.3f"|format(row.polarity) }}</td>
+                <td>{{ "%.3f"|format(row.subjectivity) }}</td>
+                <td>{{ row.created_at }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      {% endif %}
+    </main>
+  </body>
+</html>
