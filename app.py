@@ -45,23 +45,25 @@ def index():
         if not count.isdigit() or int(count) <= 0:
             context["error"] = "Count must be a positive number."
             return render_template("index.html", **context)
+        count_value = int(count)
 
         if not _credentials_available():
             context["error"] = "Twitter API credentials are missing. Add values to your .env file."
             return render_template("index.html", **context)
 
         analyzer = TwitterAnalyzer()
-        results = analyzer.analyze_tweets(keyword=keyword, count=int(count))
+        results = analyzer.analyze_tweets(keyword=keyword, count=count_value)
 
         if results is None:
             context["error"] = "Could not fetch tweets. Check your credentials or Twitter API access."
             return render_template("index.html", **context)
 
         context["summary"] = _summary_from_results(results)
-        context["rows"] = results.head(25).to_dict(orient="records")
+        context["rows"] = results.head(count_value).to_dict(orient="records")
 
     return render_template("index.html", **context)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    app.run(debug=debug_mode)
