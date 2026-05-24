@@ -34,8 +34,8 @@ def analyze():
     try:
         analyzer = TwitterAnalyzer()
         df = analyzer.analyze_tweets(keyword=keyword, count=count)
-    except Exception as exc:
-        return jsonify({"error": f"Failed to initialize analyzer: {exc}"}), 500
+    except Exception:
+        return jsonify({"error": "Failed to initialize analyzer."}), 500
 
     if df is None or df.empty:
         return jsonify({"error": "No tweets were returned from the Twitter API."}), 500
@@ -81,4 +81,4 @@ def analyze():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

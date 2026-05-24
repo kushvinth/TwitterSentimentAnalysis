@@ -42,10 +42,16 @@ function renderTweets(tweets) {
   tweets.slice(0, 8).forEach((tweet) => {
     const card = document.createElement('article');
     card.className = `tweet-card ${tweet.sentiment}`;
-    card.innerHTML = `
-      <div>${tweet.tweet}</div>
-      <div class="meta">${tweet.sentiment.toUpperCase()} • polarity ${tweet.polarity} • ${new Date(tweet.created_at).toLocaleString()}</div>
-    `;
+
+    const textNode = document.createElement('div');
+    textNode.textContent = tweet.tweet;
+
+    const metaNode = document.createElement('div');
+    metaNode.className = 'meta';
+    metaNode.textContent = `${tweet.sentiment.toUpperCase()} • polarity ${tweet.polarity} • ${new Date(tweet.created_at).toLocaleString()}`;
+
+    card.appendChild(textNode);
+    card.appendChild(metaNode);
     tweetList.appendChild(card);
   });
 }
