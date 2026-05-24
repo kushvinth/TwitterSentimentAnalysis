@@ -7,6 +7,9 @@ from twitter_analyzer import TwitterAnalyzer
 load_dotenv()
 
 app = Flask(__name__)
+DEFAULT_TWEET_COUNT = 25
+MAX_TWEET_COUNT = 100
+NEUTRAL_SENTIMENT_THRESHOLD = 0.01
 
 
 def _credentials_available():
@@ -18,10 +21,9 @@ def _summary_from_results(df):
     if df is None or df.empty:
         return {"positive": 0, "neutral": 0, "negative": 0, "avg_polarity": 0}
 
-    neutral_threshold = 0.01
-    positive = int((df["polarity"] > neutral_threshold).sum())
-    negative = int((df["polarity"] < -neutral_threshold).sum())
-    neutral = int((df["polarity"].abs() <= neutral_threshold).sum())
+    positive = int((df["polarity"] > NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    negative = int((df["polarity"] < -NEUTRAL_SENTIMENT_THRESHOLD).sum())
+    neutral = int((df["polarity"].abs() <= NEUTRAL_SENTIMENT_THRESHOLD).sum())
 
     return {
         "positive": positive,
@@ -33,18 +35,24 @@ def _summary_from_results(df):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    context = {"rows": [], "summary": None, "error": None}
+    context = {
+        "rows": [],
+        "summary": None,
+        "error": None,
+        "default_count": DEFAULT_TWEET_COUNT,
+        "max_count": MAX_TWEET_COUNT,
+    }
 
     if request.method == "POST":
         keyword = request.form.get("keyword", "").strip()
-        count = request.form.get("count", "25").strip()
+        count = request.form.get("count", str(DEFAULT_TWEET_COUNT)).strip()
 
         if not keyword:
             context["error"] = "Please enter a keyword."
             return render_template("index.html", **context)
 
-        if not count.isdigit() or int(count) <= 0:
-            context["error"] = "Count must be a positive number."
+        if not count.isdigit() or int(count) <= 0 or int(count) > MAX_TWEET_COUNT:
+            context["error"] = f"Count must be between 1 and {MAX_TWEET_COUNT}."
             return render_template("index.html", **context)
         count_value = int(count)
 
